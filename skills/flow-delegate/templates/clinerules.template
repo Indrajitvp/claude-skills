@@ -1,0 +1,21 @@
+# Rules for coding agents in this repo (workspace root = the repo root)
+
+Read ARCHITECTURE.md first. It lists the folder map, conventions and known pitfalls.
+
+## Hard rules
+- Paths are relative to the repo root. Never repeat the repo folder name inside a path.
+- Never delete and recreate an existing file. Append, insert after an exact anchor, or replace an exact block.
+- Re-read the region you edited. Keep each edit under about 80 lines.
+- Never create scratch or backup files (`*.bak`, `*.clean`, `*.final`, `test_*syntax*`). Use git to undo.
+- If a file is broken and the cause is not obvious in two tries: `git checkout -- <file>`, then redo the smallest change.
+- Touch only the files your task lists. Do not edit plan files or their `Status:` lines.
+- Do not print non-ASCII symbols from scripts (Windows consoles).
+
+## Done means proven
+- After every Python edit: `python -m py_compile <file>`.
+- Before you finish: `python automation/check.py` (or the flag your task names) must print `RESULT: PASS`. Paste its summary.
+- If it fails, fix the cause. Do not call a failure out of scope, and do not stop while the code does not run.
+- After three failed attempts at one problem: stop and say what you tried and what the error is.
+
+## Git
+- Commit only when check.py passes. Message: `[TAG] short summary`, no trailers or co-author lines. Never force-push.

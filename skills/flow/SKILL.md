@@ -67,6 +67,19 @@ the project's language.
 
 Continue only once the grill's frontier is empty and the user confirms.
 
+Then ask one last question: **who builds?** Read `executor:` from `.flow/config.md`
+(default `claude`), offer it as the default, and ask once: "Executor for this plan:
+<default>? Switch any phase?"
+
+- **Executor: claude** — Claude implements each phase here, as below.
+- **Executor: cline** — Claude writes small task files, `flow-delegate` runs the
+  Cline CLI unattended and a script judges the result; Claude reviews and ships.
+  Suggest it when the phases are mostly new files, components or routes and the repo
+  has (or can be bootstrapped with) `automation/check.py`.
+
+Record the answer in the plan's Decisions as `Executor → <claude|cline>`. A phase
+that differs gets its own `Executor:` line under its heading.
+
 ## 4. Write the plan
 
 Write `.flow/<slug>/plan.md` (`<slug>` = short kebab-case name for the work):
@@ -104,7 +117,12 @@ For each phase in order:
 1. **Announce** — post the phase's plain-language scope and technical scope.
    Wait for the user's go or a redirect.
 2. **Build** — implement the slice. At the seams agreed in the grill, invoke
-   `mattpocock-skills:tdd`. Do not test rendering.
+   `mattpocock-skills:tdd`. Do not test rendering. **Pick the executor in this
+   order: the phase's own `Executor:` line, then the plan's `Executor →` decision,
+   then `executor:` in `.flow/config.md`, then `claude`. If it is cline, invoke
+   `flow-delegate` instead** and follow it through its run and report; it covers
+   build and verify, then return here for Review. `flow-delegate` can hand a phase
+   back to Claude when Cline keeps failing; see its fallback rules.
 3. **Verify** — run the `verify` command from `.flow/config.md`. Red tree: fix it
    when this phase is the cause; stop and report when it is pre-existing or
    unrelated. A hard bug → invoke `mattpocock-skills:diagnosing-bugs`. Never carry

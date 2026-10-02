@@ -26,6 +26,11 @@ correct:
    only if the repo already tracks work there (GitHub Issues, Linear).
 5. **Domain docs** — is there a `CONTEXT.md`? Where do ADRs live? Record the paths
    that exist; do not create them.
+6. **Executor** — will builds sometimes be handed to the Cline CLI? Default
+   `claude`. If the user wants `cline`, check whether `automation/check.py` exists;
+   if not, offer to bootstrap with the `flow-delegate` skill
+   (`scripts/install.py`), and make `verify` point at `python automation/check.py`
+   (with a `cd <dir> &&` prefix when the code lives in a subfolder).
 
 ## Write the config
 
@@ -38,6 +43,7 @@ verify: <command>
 test-one: <command>
 commit-to-main: <true|false>
 tracker: .flow/<slug>/
+executor: claude               # or cline (uses the flow-delegate skill)
 context: CONTEXT.md            # line omitted if absent
 adr: docs/adr/                 # line omitted if absent
 ```
